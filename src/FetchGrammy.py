@@ -6,11 +6,17 @@ YEAR_STRING = 'Year[I]'
 RECORD_STRING = 'Record'
 ARTISTS_STRING = 'Artist(s)'
 
+DATAFRAME_HEADER = ['year', 'record', 'artist', 'lyrics']
+
 
 class FetchGrammy():
 
     def __init__(self):
         self.wi = WebInteraction()
+
+    def get_lyrics(self, song_name, artist):
+        lyrics = ''
+        return lyrics
 
     def get_record_of_the_year(self):
         records = []
@@ -28,15 +34,21 @@ class FetchGrammy():
                     year = year[0: 4]
                     record = row[1]
                     artists = row[2]
-                    song_info = (year, record, artists)
+                    lyrics = self.get_lyrics(song_name=record, artist=artists)
+                    song_info = (year, record, artists, lyrics)
                     records.append(song_info)
             except:
                 ...
+            df = pd.DataFrame(records, columns=DATAFRAME_HEADER)
+        return df
 
-        return records
 
 
 if __name__ == '__main__':
     fg = FetchGrammy()
     records = fg.get_record_of_the_year()
-    print(records)
+
+    for ind in records.index:
+        print("----------------")
+        for i in DATAFRAME_HEADER:
+         print(records[i][ind])
