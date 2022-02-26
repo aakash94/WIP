@@ -15,7 +15,8 @@ class FetchGrammy():
         self.wi = WebInteraction()
 
     def get_lyrics(self, song_name, artist):
-        lyrics = ''
+
+        lyrics = self.wi.lyrics_things(song_name=song_name, artist=artist)
         return lyrics
 
     def get_record_of_the_year(self):

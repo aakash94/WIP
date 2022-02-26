@@ -13,6 +13,9 @@ class WebInteraction():
         df = pd.read_html(url_link)
         return df
 
+    def lyrics_things(self, song_name, artist):
+        lyrics = "BLAH BLAH"
+        return lyrics
 
 if __name__ == '__main__':
     wi = WebInteraction()
