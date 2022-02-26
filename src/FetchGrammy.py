@@ -44,7 +44,6 @@ class FetchGrammy():
         return df
 
 
-
 if __name__ == '__main__':
     fg = FetchGrammy()
     records = fg.get_record_of_the_year()
@@ -52,4 +51,4 @@ if __name__ == '__main__':
     for ind in records.index:
         print("----------------")
         for i in DATAFRAME_HEADER:
-         print(records[i][ind])
+            print(records[i][ind])

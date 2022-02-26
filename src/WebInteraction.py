@@ -17,6 +17,7 @@ class WebInteraction():
         lyrics = "BLAH BLAH"
         return lyrics
 
+
 if __name__ == '__main__':
     wi = WebInteraction()
     url = "https://en.wikipedia.org/wiki/Grammy_Award_for_Record_of_the_Year"
