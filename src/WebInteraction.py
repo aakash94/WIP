@@ -1,20 +1,30 @@
 import pandas as pd
+import lyricsgenius as lg #pip install git+https://github.com/johnwmillr/LyricsGenius.git
 
 
 class WebInteraction():
 
     def __init__(self):
-        '''
-        Use this class to write all web interaction related calls.
-        '''
-        pass
+        genius = lg.Genius('tbQ-t4_zZ6HU1JfmDnrhx30Dve1abSJ-FUq3WJIaflHDhUppnMRV4meiFI8Vob6o',
+                           skip_non_songs=True, excluded_terms=["(Remix)", "(Live)"],
+                           remove_section_headers=True)
 
     def get_dataframe_from_url(self, url_link):
         df = pd.read_html(url_link)
         return df
 
     def lyrics_things(self, song_name, artist):
-        lyrics = "BLAH BLAH"
+
+        lyrics = []
+
+        try:
+            songs = genius.search_artist(artist,max_songs = 10, include_features=True) #top 10 songs of artics
+            lyrics = songs.song(song_name).lyrics #search for song in songs, lyrics as string
+            lyrics = lyrics.split('\n',1)[1] #removing the head
+
+        except:
+            print('sorry, could not find songzzzz')
+
         return lyrics
 
 

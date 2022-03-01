@@ -15,7 +15,7 @@ class FetchGrammy():
         self.wi = WebInteraction()
 
     def get_lyrics(self, song_name, artist):
-
+        # file = open("/Users/User/Desktop/auto_.txt", "w")
         lyrics = self.wi.lyrics_things(song_name=song_name, artist=artist)
         return lyrics
 
