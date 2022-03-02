@@ -1,11 +1,15 @@
 import pandas as pd
 import lyricsgenius as lg #pip install git+https://github.com/johnwmillr/LyricsGenius.git
-
+import os
 
 class WebInteraction():
 
     def __init__(self):
-        self.genius = lg.Genius('',
+        token = ""
+        token_path = os.path.join("..", "res", "GeniusToken")
+        with open(token_path) as f:
+            token = f.readlines()[0]
+        self.genius = lg.Genius(token,
                            skip_non_songs=True, excluded_terms=["(Remix)", "(Live)"],
                            remove_section_headers=True)
 
