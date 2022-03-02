@@ -5,7 +5,7 @@ import lyricsgenius as lg #pip install git+https://github.com/johnwmillr/LyricsG
 class WebInteraction():
 
     def __init__(self):
-        genius = lg.Genius('tbQ-t4_zZ6HU1JfmDnrhx30Dve1abSJ-FUq3WJIaflHDhUppnMRV4meiFI8Vob6o',
+        self.genius = lg.Genius('',
                            skip_non_songs=True, excluded_terms=["(Remix)", "(Live)"],
                            remove_section_headers=True)
 
@@ -18,12 +18,12 @@ class WebInteraction():
         lyrics = []
 
         try:
-            songs = genius.search_artist(artist,max_songs = 10, include_features=True) #top 10 songs of artics
-            lyrics = songs.song(song_name).lyrics #search for song in songs, lyrics as string
+            songs = self.genius.search_song(artist,song_name)
+            lyrics = songs.lyrics #search for song in songs, lyrics as string
             lyrics = lyrics.split('\n',1)[1] #removing the head
 
         except:
-            print('sorry, could not find songzzzz')
+            print(f"could not find lyrics to  {song_name}")
 
         return lyrics
 
