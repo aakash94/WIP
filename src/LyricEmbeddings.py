@@ -7,10 +7,12 @@ class LyricEmbeddings():
 
     def get_embeddings(self, lyrics):
         embeddings = None
+        # TODO : Get embeddings of lyrics
         return embeddings
 
     def get_embedding_similarity(self, embedding1, embedding2):
         similarity = None
+        # TODO : Get similarity of embeddings
         return similarity
 
     def get_lyric_similarity(self, lyric1, lyric2):
