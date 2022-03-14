@@ -33,7 +33,11 @@ class FetchGrammy():
         ...
 
     def get_commentary_(self):
-        # TODO : Decide on what's available and fetch them
+        # TODO : Decide on what's available and fetch it
+        ...
+
+    def get_nytimes_(self):
+        # TODO : Decide on what's available and fetch it
         ...
 
     def get_lyrics(self, song_name, artist):
