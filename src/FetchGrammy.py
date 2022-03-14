@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 
 from WebInteraction import WebInteraction
 
@@ -13,6 +14,7 @@ class FetchGrammy():
 
     def __init__(self):
         self.wi = WebInteraction()
+        self.res_path = os.path.join("..", "res", )
 
     def get_lyrics(self, song_name, artist):
         # file = open("/Users/User/Desktop/auto_.txt", "w")
@@ -43,10 +45,25 @@ class FetchGrammy():
             df = pd.DataFrame(records, columns=DATAFRAME_HEADER)
         return df
 
+    def save_pkl(self, dataframe: pd.DataFrame, file_name="fg.pkl"):
+        # motivation: automatically saves dfs in the res folder,
+        # and unless required the file name need not be mentioned everytime
+        path = os.path.join(self.res_path, file_name)
+        dataframe.to_pickle(path)
+
+    def load_pkl(self, file_name="fg.pkl"):
+        # motivation: automatically loads df from the res folder,
+        # and unless required the file name need not be mentioned everytime
+        path = os.path.join(self.res_path, file_name)
+        dataframe = pd.read_pickle(path)
+        return dataframe
+
 
 if __name__ == '__main__':
     fg = FetchGrammy()
-    records = fg.get_record_of_the_year()
+    # records = fg.get_record_of_the_year()
+    # fg.save_pkl(records, "records.pkl")
+    records = fg.load_pkl("records.pkl")
 
     for ind in records.index:
         print("----------------")
