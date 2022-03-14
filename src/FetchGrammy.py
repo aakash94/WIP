@@ -16,6 +16,26 @@ class FetchGrammy():
         self.wi = WebInteraction()
         self.res_path = os.path.join("..", "res", )
 
+    def get_artist_gender(self, artist_name):
+        # TODO : Get gender of artists here
+        ...
+
+    def get_artist_age(self, artist_name):
+        # TODO : Get age of artists here
+        ...
+
+    def get_album_from_song(self, song_name):
+        # TODO : Get song name
+        ...
+
+    def get_genre_from_album(self, album_name):
+        # TODO : Get genre of an album
+        ...
+
+    def get_commentary_(self):
+        # TODO : Decide on what's available and fetch them
+        ...
+
     def get_lyrics(self, song_name, artist):
         # file = open("/Users/User/Desktop/auto_.txt", "w")
         lyrics = self.wi.lyrics_things(song_name=song_name, artist=artist)
@@ -66,6 +86,6 @@ if __name__ == '__main__':
     records = fg.load_pkl("records.pkl")
 
     for ind in records.index:
-        print("----------------")
+        print("\n\n\n----------------")
         for i in DATAFRAME_HEADER:
             print(records[i][ind])
