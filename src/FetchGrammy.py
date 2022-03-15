@@ -1,5 +1,5 @@
 import pandas as pd
-import  numpy as np
+import numpy as np
 import os
 
 from WebInteraction import WebInteraction
@@ -9,6 +9,7 @@ RECORD_STRING = 'Record'
 ARTISTS_STRING = 'Artist(s)'
 
 DATAFRAME_HEADER = ['year', 'record', 'artist', 'gender', 'lyrics']
+DELIMITER = "\t"
 
 
 class FetchGrammy():
@@ -87,6 +88,12 @@ class FetchGrammy():
         path = os.path.join(self.res_path, file_name)
         dataframe.to_pickle(path)
 
+    def save_tsv(self, dataframe: pd.DataFrame, file_name="fg.tsv"):
+        # motivation: automatically saves dfs in the res folder,
+        # and unless required the file name need not be mentioned everytime
+        path = os.path.join(self.res_path, file_name)
+        dataframe.to_csv(path, sep=DELIMITER, index=False)
+
     def load_pkl(self, file_name="fg.pkl"):
         # motivation: automatically loads df from the res folder,
         # and unless required the file name need not be mentioned everytime
@@ -94,17 +101,25 @@ class FetchGrammy():
         dataframe = pd.read_pickle(path)
         return dataframe
 
+    def load_tsv(self, file_name="fg.tsv"):
+        # motivation: automatically loads df from the res folder,
+        # and unless required the file name need not be mentioned everytime
+        path = os.path.join(self.res_path, file_name)
+        dataframe = pd.read_csv(path, sep=DELIMITER)
+        return dataframe
+
 
 if __name__ == '__main__':
     fg = FetchGrammy()
-    records = fg.load_pkl("records.pkl")
-    print(records.header)
+    records = fg.load_tsv()
+    fg.save_tsv(dataframe=records)
+    print(records)
     '''
     records.insert(2, 'gender','Unknown')
     records['gender'] = records.apply(lambda row: fg.get_artist_gender(artist_name=row['artist']) , axis=1)
     print(records)
     fg.save_pkl(records, "records.pkl")
-
+AttributeError: 'DataFrame' object has no attribute 'header'. Did you mean: 'gender'?
     artist_name = 'Adele'
     print(fg.get_artist_gender(artist_name=artist_name))
     # records = fg.get_record_of_the_year()
