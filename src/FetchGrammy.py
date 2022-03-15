@@ -1,4 +1,5 @@
 import pandas as pd
+import  numpy as np
 import os
 
 from WebInteraction import WebInteraction
@@ -7,7 +8,7 @@ YEAR_STRING = 'Year[I]'
 RECORD_STRING = 'Record'
 ARTISTS_STRING = 'Artist(s)'
 
-DATAFRAME_HEADER = ['year', 'record', 'artist', 'lyrics']
+DATAFRAME_HEADER = ['year', 'record', 'artist', 'gender', 'lyrics']
 
 
 class FetchGrammy():
@@ -16,15 +17,25 @@ class FetchGrammy():
         self.wi = WebInteraction()
         self.res_path = os.path.join("..", "res", )
 
-    def get_artist_gender(self, artist_name):
-        # TODO : Get gender of artists here
-        ...
+    def get_artist_gender(self, artist_name: str):
+        artist_name = artist_name.strip()
+        artist_name = artist_name.replace(' ', '+')
+        gender = 'Unknown'
+        mb_url = "https://musicbrainz.org/search?query=" + artist_name + "&type=artist&limit=1"
+        dfs = self.wi.get_dataframe_from_url(url_link=mb_url)
+        if len(dfs) > 0:
+            df = dfs[0]  # since only 1 row queried
+            gender = df['Gender'][0]
+            if isinstance(gender, np.floating):
+                # gender is empty in the site
+                gender = 'Unknown'
+        return gender
 
     def get_artist_age(self, artist_name):
         # TODO : Get age of artists here
         ...
 
-    def get_album_from_song(self, song_name):
+    def get_album_from_song(self, song_name, artist_name):
         # TODO : Get song name
         ...
 
@@ -62,7 +73,8 @@ class FetchGrammy():
                     record = row[1]
                     artists = row[2]
                     lyrics = self.get_lyrics(song_name=record, artist=artists)
-                    song_info = (year, record, artists, lyrics)
+                    gender = self.get_artist_gender(artist_name=artists)
+                    song_info = (year, record, artists, gender, lyrics)
                     records.append(song_info)
             except:
                 ...
@@ -85,6 +97,16 @@ class FetchGrammy():
 
 if __name__ == '__main__':
     fg = FetchGrammy()
+    records = fg.load_pkl("records.pkl")
+    print(records.header)
+    '''
+    records.insert(2, 'gender','Unknown')
+    records['gender'] = records.apply(lambda row: fg.get_artist_gender(artist_name=row['artist']) , axis=1)
+    print(records)
+    fg.save_pkl(records, "records.pkl")
+
+    artist_name = 'Adele'
+    print(fg.get_artist_gender(artist_name=artist_name))
     # records = fg.get_record_of_the_year()
     # fg.save_pkl(records, "records.pkl")
     records = fg.load_pkl("records.pkl")
@@ -93,3 +115,4 @@ if __name__ == '__main__':
         print("\n\n\n----------------")
         for i in DATAFRAME_HEADER:
             print(records[i][ind])
+    '''
