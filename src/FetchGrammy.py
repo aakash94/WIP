@@ -112,7 +112,6 @@ class FetchGrammy():
 if __name__ == '__main__':
     fg = FetchGrammy()
     records = fg.load_tsv()
-    fg.save_tsv(dataframe=records)
     print(records)
     '''
     records.insert(2, 'gender','Unknown')
