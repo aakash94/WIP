@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import os
 import re
-
+from tqdm import tqdm
 from WebInteraction import WebInteraction
 
 YEAR_STRING = 'Year[I]'
@@ -10,7 +10,7 @@ RECORD_STRING = 'Record'
 ARTISTS_STRING = 'Artist(s)'
 
 DATAFRAME_HEADER = ['year', 'record', 'artist', 'gender', 'lyrics']
-DELIMITER = "^"
+DELIMITER = "\t"
 
 
 class FetchGrammy():
@@ -58,8 +58,12 @@ class FetchGrammy():
         pattern = r'[0-9]'
         lyrics = self.wi.lyrics_things(song_name=song_name, artist=artist)
         length = len(lyrics) - len("Embed")
-        lyrics = lyrics[:length]
-        lyrics = re.sub(pattern, '', lyrics)
+        if length > 0:
+            # there is some lyrics, and it is not just plain empty string
+            lyrics = lyrics[:length]
+            lyrics = re.sub(pattern, '', lyrics)
+            # remove all occurrences of the delimiter from the lyrics
+            lyrics = re.sub(DELIMITER, '', lyrics)
         return lyrics
 
     def get_record_of_the_year(self):
@@ -68,23 +72,25 @@ class FetchGrammy():
         tables = self.wi.get_dataframe_from_url(url_link=url)
         del tables[0]  # remove the header table
         del tables[0]  # remove 1959
+        tables = tables[:-3]  # remove tables at the end
 
-        for t in tables:
-            df = pd.DataFrame()
-            try:
-                df = t[[YEAR_STRING, RECORD_STRING, ARTISTS_STRING]]
-                for index, row in df.iterrows():
-                    year = row[0]
-                    year = year[0: 4]
-                    record = row[1]
-                    artists = row[2]
-                    lyrics = self.get_lyrics(song_name=record, artist=artists)
-                    gender = self.get_artist_gender(artist_name=artists)
-                    song_info = (year, record, artists, gender, lyrics)
-                    records.append(song_info)
-            except:
-                ...
-            df = pd.DataFrame(records, columns=DATAFRAME_HEADER)
+        df = pd.DataFrame()
+        for t in tqdm(tables):
+            # try:
+            df = t[[YEAR_STRING, RECORD_STRING, ARTISTS_STRING]]
+            for index, row in df.iterrows():
+                year = row[0]
+                year = year[0: 4]
+                print(year)
+                record = row[1]
+                artists = row[2]
+                lyrics = self.get_lyrics(song_name=record, artist=artists)
+                gender = self.get_artist_gender(artist_name=artists)
+                song_info = (year, record, artists, gender, lyrics)
+                records.append(song_info)
+            # except Exception as e:
+            # print(e)
+        df = pd.DataFrame(records, columns=DATAFRAME_HEADER)
         return df
 
     def save_pkl(self, dataframe: pd.DataFrame, file_name="fg.pkl"):
@@ -116,20 +122,15 @@ class FetchGrammy():
 
 if __name__ == '__main__':
     fg = FetchGrammy()
-    records = fg.get_record_of_the_year()
-    fg.save_tsv(dataframe=records)
-    '''
-    records.insert(2, 'gender','Unknown')
-    records['gender'] = records.apply(lambda row: fg.get_artist_gender(artist_name=row['artist']) , axis=1)
-    print(records)
-    fg.save_pkl(records, "records.pkl")
-AttributeError: 'DataFrame' object has no attribute 'header'. Did you mean: 'gender'?
-    artist_name = 'Adele'
-    print(fg.get_artist_gender(artist_name=artist_name))
     # records = fg.get_record_of_the_year()
-    # fg.save_pkl(records, "records.pkl")
-    records = fg.load_pkl("records.pkl")
-
+    # fg.save_pkl(dataframe=records)
+    records = fg.load_tsv()
+    '''
+    # records['gender'] = records.apply(lambda row: fg.get_artist_gender(artist_name=row['artist']), axis=1)
+    records['lyrics'] = records.apply(lambda row: fg.get_lyrics(song_name=row['record'], artist=row['artist']), axis=1)
+    print(records)
+    fg.save_tsv(dataframe=records)    
+    
     for ind in records.index:
         print("\n\n\n----------------")
         for i in DATAFRAME_HEADER:

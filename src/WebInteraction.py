@@ -12,7 +12,7 @@ class WebInteraction():
             token = f.readlines()[0]
         self.genius = lg.Genius(token,
                                 skip_non_songs=True, excluded_terms=["(Remix)", "(Live)"],
-                                remove_section_headers=True)
+                                remove_section_headers=True, verbose=False)
 
     def get_dataframe_from_url(self, url_link):
         try:
@@ -31,7 +31,8 @@ class WebInteraction():
             lyrics = lyrics.split('\n', 1)[1]  # removing the head
 
         except:
-            print(f"could not find lyrics to  {song_name}")
+            #print(f"could not find lyrics to  {song_name}")
+            ...
 
         return lyrics
 
