@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import os
+import re
 
 from WebInteraction import WebInteraction
 
@@ -9,7 +10,7 @@ RECORD_STRING = 'Record'
 ARTISTS_STRING = 'Artist(s)'
 
 DATAFRAME_HEADER = ['year', 'record', 'artist', 'gender', 'lyrics']
-DELIMITER = "\t"
+DELIMITER = "^"
 
 
 class FetchGrammy():
@@ -54,7 +55,11 @@ class FetchGrammy():
 
     def get_lyrics(self, song_name, artist):
         # file = open("/Users/User/Desktop/auto_.txt", "w")
+        pattern = r'[0-9]'
         lyrics = self.wi.lyrics_things(song_name=song_name, artist=artist)
+        length = len(lyrics) - len("Embed")
+        lyrics = lyrics[:length]
+        lyrics = re.sub(pattern, '', lyrics)
         return lyrics
 
     def get_record_of_the_year(self):
@@ -111,8 +116,8 @@ class FetchGrammy():
 
 if __name__ == '__main__':
     fg = FetchGrammy()
-    records = fg.load_tsv()
-    print(records)
+    records = fg.get_record_of_the_year()
+    fg.save_tsv(dataframe=records)
     '''
     records.insert(2, 'gender','Unknown')
     records['gender'] = records.apply(lambda row: fg.get_artist_gender(artist_name=row['artist']) , axis=1)
