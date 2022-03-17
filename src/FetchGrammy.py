@@ -9,7 +9,7 @@ YEAR_STRING = 'Year[I]'
 RECORD_STRING = 'Record'
 ARTISTS_STRING = 'Artist(s)'
 
-DATAFRAME_HEADER = ['year', 'record', 'artist', 'gender', 'lyrics']
+DATAFRAME_HEADER = ['year', 'record', 'artist', 'gender', 'lyrics', 'sentiment']
 DELIMITER = "\t"
 
 
